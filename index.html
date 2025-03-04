@@ -1,115 +1,221 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title>Formation de Coach avec Christine Moulin</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Gourmet - Machine à Sous</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .header {
+            width: 100%;
+            background: #000;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 100px;
+        }
+        h1 { color: #000; font-size: 22px; }
+        p { font-size: 16px; color: #333; }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        #googleBtn { background: #007bff; color: white; }
+        #playBtn {
+            background: gray;
+            color: white;
+            cursor: not-allowed;
+        }
+        .slot-machine-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .slot-machine {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background: #111;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .slot {
+            width: 80px;
+            height: 80px;
+            font-size: 40px;
+            text-align: center;
+            line-height: 80px;
+            background: #fff;
+            border-radius: 10px;
+            border: 4px solid #444;
+            margin: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .result {
+            font-size: 18px;
+            font-weight: bold;
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .success { background: #28a745; color: white; }
+        .fail { background: #dc3545; color: white; }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        /* Style du certificat */
+        #certificate {
+            display: none;
+            background: white;
+            border: 2px solid #28a745;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            color: #000;
+        }
+        /* Animation confettis */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            top: 0;
+            opacity: 0.7;
+            animation: fall 5s linear infinite;
+        }
+        @keyframes fall {
+            from { transform: translateY(-10px); }
+            to { transform: translateY(100vh); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Le Gourmet</div>
+    <div class="container">
+        <h1>Gagnez une Expérience Gourmande !</h1>
+        <p>Laissez un avis sur Google et tentez votre chance à notre machine à sous pour remporter un dessert ou une bière artisanale !</p>
+        <button id="googleBtn" onclick="visitGoogle()">Laisser un avis sur Google</button>
+        <button id="playBtn" onclick="playSlot()" disabled>Jouer à la machine à sous</button>
+        
+        <div class="slot-machine-container">
+            <div class="slot-machine">
+                <div class="slot" id="slot1">❓</div>
+                <div class="slot" id="slot2">❓</div>
+                <div class="slot" id="slot3">❓</div>
+            </div>
+        </div>
+        <div class="result" id="result"></div>
+        <div id="certificate"></div>
+    </div>
+    <div class="footer">
+        <a href="https://www.votresite.com">Visitez notre site officiel</a>
+    </div>
 
-		<!-- Header -->
-		<div id="header">
-			<span class="logo icon fa-paper-plane"></span>
-			<h1>Bienvenue chez Christine Moulin</h1>
-			<p>Découvrez nos formations pour devenir coach en entreprise
-			<br />
-			et propulser votre carrière vers de nouveaux horizons.</p>
-		</div>
+    <script>
+        let canPlay = false;
+        let hasPlayed = false;
 
-		<!-- Main -->
-		<div id="main">
+        function visitGoogle() {
+            window.open('https://www.google.com/maps/place/YourBusiness', '_blank');
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('playBtn').style.background = '#28a745';
+            document.getElementById('playBtn').style.cursor = 'pointer';
+            canPlay = true;
+        }
 
-			<header class="major container medium">
-				<h2>Transformez votre passion pour le coaching
-				<br />
-				en une carrière enrichissante</h2>
-			</header>
+        function playSlot() {
+            if (!canPlay || hasPlayed) return;
+            hasPlayed = true;
+            document.getElementById('playBtn').disabled = true;
+            document.getElementById('playBtn').style.background = 'gray';
+            document.getElementById('playBtn').style.cursor = 'not-allowed';
+            
+            let items = ['🍺', '🍺', '🍺', '🍺', '🍺', '🍺', '🍺', '🍺', '🍺', '🍷', '🍰'];
+            let slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
+            let resultText = document.getElementById('result');
+            let certificate = document.getElementById('certificate');
 
-			<div class="box alt container">
-				<section class="feature left">
-					<a href="#" class="image icon solid fa-signal"><img src="images/pic01.jpg" alt="" /></a>
-					<div class="content">
-						<h3>Découvrez votre potentiel</h3>
-						<p>Apprenez les compétences essentielles pour guider efficacement les individus et les équipes vers le succès.</p>
-					</div>
-				</section>
-				<section class="feature right">
-					<a href="#" class="image icon solid fa-code"><img src="images/pic02.jpg" alt="" /></a>
-					<div class="content">
-						<h3>Formation pratique</h3>
-						<p>Plongez-vous dans des scénarios réels et des exercices interactifs pour maîtriser les techniques de coaching les plus efficaces.</p>
-					</div>
-				</section>
-				<section class="feature left">
-					<a href="#" class="image icon solid fa-mobile-alt"><img src="images/pic03.jpg" alt="" /></a>
-					<div class="content">
-						<h3>Accompagnement personnalisé</h3>
-						<p>Bénéficiez du soutien et des conseils d'experts tout au long de votre parcours de formation pour atteindre vos objectifs professionnels.</p>
-					</div>
-				</section>
-			</div>
+            function spin(slot, spins, callback) {
+                let count = 0;
+                let interval = setInterval(() => {
+                    slot.innerText = items[Math.floor(Math.random() * items.length)];
+                    count++;
+                    if (count >= spins) {
+                        clearInterval(interval);
+                        if (callback) callback();
+                    }
+                }, 100);
+            }
 
-			<footer class="major container medium">
-				<h3>Prêt à démarrer votre nouvelle carrière ?</h3>
-				<p>Contactez-nous dès aujourd'hui pour en savoir plus sur nos formations en coaching d'entreprise.</p>
-				<ul class="actions special">
-					<li><a href="#" class="button">Commencer maintenant</a></li>
-				</ul>
-			</footer>
+            spin(slots[0], 30, () => {
+                spin(slots[1], 35, () => {
+                    spin(slots[2], 40, () => {
+                        if (slots[0].innerText === slots[1].innerText && slots[1].innerText === slots[2].innerText) {
+                            let date = new Date().toLocaleString();
+                            certificate.innerHTML = `<strong>Certificat de Gain</strong><br>${date}<br>Montrez ceci au serveur.`;
+                            certificate.style.display = 'block';
+                            confettiEffect();
+                        }
+                    });
+                });
+            });
+        }
 
-		</div>
-
-		<!-- Footer -->
-		<div id="footer">
-			<div class="container medium">
-
-				<header class="major last">
-					<h2>Besoin d'aide ou avez-vous des questions ?</h2>
-				</header>
-
-				<p>Nous sommes là pour vous aider à réaliser votre rêve de devenir coach en entreprise. Contactez-nous dès maintenant.</p>
-
-				<form method="post" action="#">
-					<div class="row">
-						<div class="col-6 col-12-mobilep">
-							<input type="text" name="name" placeholder="Votre nom" />
-						</div>
-						<div class="col-6 col-12-mobilep">
-							<input type="email" name="email" placeholder="Votre email" />
-						</div>
-						<div class="col-12">
-							<textarea name="message" placeholder="Votre message" rows="6"></textarea>
-						</div>
-						<div class="col-12">
-							<ul class="actions special">
-								<li><input type="submit" value="Envoyer le message" /></li>
-							</ul>
-						</div>
-					</div>
-				</form>
-
-				<ul class="icons">
-					<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-					<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-					<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-					<li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-					<li><a href="#" class="icon brands fa-youtube"><span class="label">YouTube</span></a></li>
-				</ul>
-
-				<ul class="copyright">
-					<li>&copy; Christine Moulin Coaching. Tous droits réservés.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-				</ul>
-
-			</div>
-		</div>
-
-		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
-
-	</body>
+        function confettiEffect() {
+            for (let i = 0; i < 50; i++) {
+                let confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+    </script>
+</body>
 </html>
